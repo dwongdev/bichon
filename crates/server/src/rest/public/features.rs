@@ -16,8 +16,21 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+use poem::{handler, web::Json, IntoResponse};
+use serde::Serialize;
 
-pub mod features;
-pub mod login;
-pub mod oauth2;
-pub mod status;
+#[derive(Serialize)]
+struct FeaturesResponse {
+    features: Vec<String>,
+    edition: &'static str,
+    version: String,
+}
+
+#[handler]
+pub async fn get_features() -> impl IntoResponse {
+    Json(FeaturesResponse {
+        features: vec![],
+        edition: "community",
+        version: env!("CARGO_PKG_VERSION").to_string(),
+    })
+}
